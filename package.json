@@ -1,0 +1,27 @@
+{
+  "name": "test-claude-exploratorio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:report": "cypress run --reporter cypress-mochawesome-reporter"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caioandrian/test-claude-exploratorio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/caioandrian/test-claude-exploratorio/issues"
+  },
+  "homepage": "https://github.com/caioandrian/test-claude-exploratorio#readme",
+  "devDependencies": {
+    "cypress": "^15.17.0",
+    "cypress-mochawesome-reporter": "^4.0.2"
+  }
+}
