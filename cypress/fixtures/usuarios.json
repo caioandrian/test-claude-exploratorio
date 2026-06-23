@@ -1,0 +1,9 @@
+{
+  "emailsInvalidos": [
+    "abc",
+    "@dominio.com",
+    "usuario@",
+    "usuario@.com"
+  ],
+  "senhaBase": "Senha@123"
+}

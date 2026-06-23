@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Specs — Cypress · BugBank — Exploratório</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="generated-at" content="22/06/2026">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #111318;
+      --surface:   #1c1f28;
+      --border:    #272b38;
+      --text:      #d4d8e8;
+      --muted:     #5c6280;
+      --accent:    #6366f1;
+      --green:     #22c55e;
+      --green-bg:  #0e2018;
+      --green-lt:  #86efac;
+      --blue-bg:   #0a1e2e;
+      --blue-lt:   #93c5fd;
+      --orange-bg: #1e130a;
+      --orange-lt: #fdba74;
+      --red-bg:    #1e0c0c;
+      --red-lt:    #fca5a5;
+      --purple-bg: #160e28;
+      --purple-lt: #c4b5fd;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: .75rem 1.25rem;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .topbar-title { font-size: .85rem; font-weight: 700; color: #fff; white-space: nowrap; }
+    .topbar-title span { color: var(--muted); font-weight: 400; }
+
+    .search-wrap { flex: 1 1 220px; max-width: 380px; position: relative; }
+    .search-wrap svg {
+      position: absolute; left: .65rem; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+    }
+    #search {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-size: .8rem;
+      padding: .45rem .7rem .45rem 2.1rem; outline: none; transition: border-color .15s;
+    }
+    #search:focus { border-color: var(--accent); }
+    #search::placeholder { color: var(--muted); }
+
+    .topbar-stats { display: flex; gap: .75rem; margin-left: auto; }
+    .stat { font-size: .72rem; color: var(--muted); }
+    .stat strong { color: var(--text); }
+
+    /* ── Chips ── */
+    .chip {
+      display: inline-block; padding: .1rem .45rem; border-radius: 4px;
+      font-size: .68rem; font-weight: 600; letter-spacing: .03em; white-space: nowrap;
+    }
+    .chip-mock    { background: var(--blue-bg);   color: var(--blue-lt); }
+    .chip-real    { background: var(--purple-bg); color: var(--purple-lt); }
+    .chip-reg     { background: var(--orange-bg); color: var(--orange-lt); }
+    .chip-ci-yes  { background: var(--green-bg);  color: var(--green-lt); }
+    .chip-smoke   { background: var(--red-bg);    color: var(--red-lt); }
+
+    /* ── Page ── */
+    .page { max-width: 960px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+
+    /* ── Spec section ── */
+    .spec { margin-bottom: .75rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #161922; }
+    .spec-body { display: none; }
+    .spec.open .spec-body { display: block; }
+
+    .spec-head {
+      display: flex; align-items: center; gap: .75rem;
+      padding: .65rem 1rem; background: var(--surface);
+      cursor: pointer; user-select: none; transition: background .12s;
+    }
+    .spec-head:hover { background: #22263a; }
+
+    .spec-toggle { color: var(--muted); font-size: .7rem; transition: transform .2s; flex-shrink: 0; }
+    .spec.open .spec-toggle { transform: rotate(90deg); }
+
+    .spec-file {
+      font-family: 'Consolas', monospace; font-size: .75rem; color: #818cf8;
+      flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .spec-desc  { font-size: .75rem; color: var(--muted); white-space: nowrap; }
+    .spec-count {
+      font-size: .7rem; color: var(--muted); background: var(--bg);
+      border: 1px solid var(--border); border-radius: 99px; padding: .05rem .5rem; white-space: nowrap;
+    }
+
+    /* ── Bloco ── */
+    .bloco-head {
+      padding: .4rem 1rem; font-size: .68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .07em; color: var(--muted);
+      background: rgba(255,255,255,.02); border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Scenario row ── */
+    .scenario { border-bottom: 1px solid var(--border); }
+    .scenario:last-child { border-bottom: none; }
+
+    .scenario-row {
+      display: grid; grid-template-columns: 90px 1fr auto auto auto;
+      align-items: center; gap: .6rem; padding: .55rem 1rem;
+      cursor: pointer; transition: background .1s;
+    }
+    .scenario-row:hover { background: rgba(99,102,241,.04); }
+
+    .scenario-id    { font-family: 'Consolas', monospace; font-size: .72rem; color: #818cf8; font-weight: 700; }
+    .scenario-title { font-size: .8rem; color: var(--text); }
+    .scenario-tags  { display: flex; gap: .3rem; flex-wrap: nowrap; }
+    .scenario-ci    { text-align: center; }
+    .scenario-arrow { color: var(--muted); font-size: .65rem; transition: transform .15s; }
+    .scenario.open .scenario-arrow { transform: rotate(90deg); }
+
+    /* ── Validações ── */
+    .scenario-body {
+      display: none; padding: .5rem 1rem .7rem;
+      background: rgba(0,0,0,.15); border-top: 1px solid var(--border);
+    }
+    .scenario.open .scenario-body { display: block; }
+
+    .val-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: .25rem .75rem; }
+    .val-item {
+      display: flex; align-items: flex-start; gap: .35rem;
+      font-size: .75rem; color: var(--muted); line-height: 1.45;
+    }
+    .val-item::before { content: '✓'; color: var(--green); font-size: .65rem; margin-top: .15rem; flex-shrink: 0; }
+
+    /* ── Empty state ── */
+    #no-results { display: none; text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: .85rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .scenario-row { grid-template-columns: 70px 1fr auto; }
+      .scenario-tags, .scenario-ci { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">Specs Cypress <span>· BugBank — Exploratório</span></div>
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input id="search" type="search" placeholder="Filtrar por ID, título, tag, validação…" autocomplete="off">
+  </div>
+  <div class="topbar-stats">
+    <div class="stat"><strong id="cnt-visible">15</strong> cenários</div>
+    <div class="stat"><strong>4</strong> specs</div>
+    <div class="stat"><strong>0</strong> tags CI</div>
+  </div>
+</div>
+
+<div class="page">
+  <div id="no-results">Nenhum cenário encontrado para "<span id="no-results-term"></span>".</div>
+
+  <!-- cypress/e2e/exp-cadastro.cy.js -->
+  <div class="spec open" data-spec="real">
+    <div class="spec-head" onclick="toggleSpec(this)">
+      <span class="spec-toggle">▶</span>
+      <span class="spec-file">cypress/e2e/exp-cadastro.cy.js</span>
+      <span class="spec-desc">Exploratório — Cadastro e Saldo</span>
+      <span class="spec-count">7 cenários</span>
+    </div>
+    <div class="spec-body">
+      <div class="scenario" data-search="| exp-001 — conta sem saldo deve exibir r$ 0,00 após login real">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-001 — conta sem saldo deve exibir R$ 0,00 após login</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"></div>
+      </div>
+      <div class="scenario" data-search="">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title"></span>
+          <span class="scenario-tags"></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"></div>
+      </div>
+      <div class="scenario" data-search="| exp-008 — cadastro com e-mail já existente deve ser bloqueado real mensagem para e-mail duplicado: &quot;${msg}&quot;">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-008 — cadastro com e-mail já existente deve ser bloqueado</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Mensagem para e-mail duplicado: &quot;${msg}&quot;</div></div></div>
+      </div>
+      <div class="scenario" data-search="| exp-011 — senhas diferentes no cadastro devem bloquear criação da conta real mensagem para senhas diferentes: &quot;${msg}&quot;">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-011 — senhas diferentes no cadastro devem bloquear criação da conta</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Mensagem para senhas diferentes: &quot;${msg}&quot;</div></div></div>
+      </div>
+      <div class="scenario" data-search="| exp-015 — formulário de cadastro com todos os campos vazios deve validar real">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-015 — formulário de cadastro com todos os campos vazios deve validar</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"></div>
+      </div>
+      <div class="scenario" data-search="| exp-015b — formulário de login com campos vazios deve validar real">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-015b — formulário de login com campos vazios deve validar</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"></div>
+      </div>
+
+      <div class="bloco-head">EXP-012 — e-mails em formato inválido</div>
+      <div class="scenario" data-search="">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title"></span>
+          <span class="scenario-tags"></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- cypress/e2e/exp-login.cy.js -->
+  <div class="spec open" data-spec="real">
+    <div class="spec-head" onclick="toggleSpec(this)">
+      <span class="spec-toggle">▶</span>
+      <span class="spec-file">cypress/e2e/exp-login.cy.js</span>
+      <span class="spec-desc">Exploratório — Login</span>
+      <span class="spec-count">2 cenários</span>
+    </div>
+    <div class="spec-body">
+      <div class="scenario" data-search="| exp-006 — senha incorreta deve negar acesso e exibir mensagem de erro real mensagem de erro exibida: &quot;${msg}&quot;">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-006 — senha incorreta deve negar acesso e exibir mensagem de erro</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Mensagem de erro exibida: &quot;${msg}&quot;</div></div></div>
+      </div>
+      <div class="scenario" data-search="| exp-006b — e-mail inexistente deve negar acesso real">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-006b — e-mail inexistente deve negar acesso</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- cypress/e2e/exp-seguranca.cy.js -->
+  <div class="spec open" data-spec="regressao">
+    <div class="spec-head" onclick="toggleSpec(this)">
+      <span class="spec-toggle">▶</span>
+      <span class="spec-file">cypress/e2e/exp-seguranca.cy.js</span>
+      <span class="spec-desc">Exploratório — Segurança Básica</span>
+      <span class="spec-count">1 cenário</span>
+    </div>
+    <div class="spec-body">
+      <div class="scenario" data-search="bug detectado: rota &quot;${rota}&quot; acessível sem autenticação. url atual: ${url}">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title"></span>
+          <span class="scenario-tags"></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">BUG DETECTADO: Rota &quot;${rota}&quot; acessível sem autenticação. URL atual: ${url}</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- cypress/e2e/exp-transferencia.cy.js -->
+  <div class="spec open" data-spec="real">
+    <div class="spec-head" onclick="toggleSpec(this)">
+      <span class="spec-toggle">▶</span>
+      <span class="spec-file">cypress/e2e/exp-transferencia.cy.js</span>
+      <span class="spec-desc">Exploratório — Transferência</span>
+      <span class="spec-count">5 cenários</span>
+    </div>
+    <div class="spec-body">
+      <div class="scenario" data-search="| exp-003 — transferência deve debitar remetente e creditar destinatário real resultado da transferência: &quot;${msg}&quot; saldo de b após receber transferência: r$ ${saldob}">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-003 — transferência deve debitar remetente e creditar destinatário</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Resultado da transferência: &quot;${msg}&quot;</div>
+          <div class="val-item">Saldo de B após receber transferência: R$ ${saldoB}</div></div></div>
+      </div>
+      <div class="scenario" data-search="| exp-009 — transferência com valor zero deve ser bloqueada real mensagem para valor 0: &quot;${msg}&quot;">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-009 — transferência com valor zero deve ser bloqueada</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Mensagem para valor 0: &quot;${msg}&quot;</div></div></div>
+      </div>
+      <div class="scenario" data-search="| exp-009b — transferência com valor negativo deve ser bloqueada real mensagem para valor negativo: &quot;${msg}&quot;">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-009b — transferência com valor negativo deve ser bloqueada</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Mensagem para valor negativo: &quot;${msg}&quot;</div></div></div>
+      </div>
+      <div class="scenario" data-search="| exp-010 — transferência acima do saldo deve ser bloqueada e não gerar saldo negativo real mensagem para valor acima do saldo: &quot;${msg}&quot;">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-010 — transferência acima do saldo deve ser bloqueada e não gerar saldo negativo</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Mensagem para valor acima do saldo: &quot;${msg}&quot;</div></div></div>
+      </div>
+      <div class="scenario" data-search="| exp-019 — double-click no botão transferir não deve debitar o valor duas vezes real valor total debitado: r$ ${debitado}">
+        <div class="scenario-row" onclick="toggleScenario(this)">
+          <span class="scenario-id"></span>
+          <span class="scenario-title">| EXP-019 — double-click no botão Transferir não deve debitar o valor duas vezes</span>
+          <span class="scenario-tags"><span class="chip chip-real">@real</span></span>
+          <span class="scenario-ci"></span>
+          <span class="scenario-arrow">▶</span>
+        </div>
+        <div class="scenario-body"><div class="val-grid"><div class="val-item">Valor total debitado: R$ ${debitado}</div></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleSpec(head) {
+    head.closest('.spec').classList.toggle('open');
+  }
+  function toggleScenario(row) {
+    row.closest('.scenario').classList.toggle('open');
+  }
+
+  const input         = document.getElementById('search');
+  const noResults     = document.getElementById('no-results');
+  const noResultsTerm = document.getElementById('no-results-term');
+  const cntVisible    = document.getElementById('cnt-visible');
+  const TOTAL         = 15;
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    let visible = 0;
+
+    document.querySelectorAll('.spec').forEach(spec => {
+      const scenarios = spec.querySelectorAll('.scenario');
+      let specVisible = 0;
+
+      scenarios.forEach(sc => {
+        const match = !q || sc.dataset.search.includes(q);
+        sc.style.display = match ? '' : 'none';
+        if (match) { specVisible++; visible++; if (q) sc.classList.add('open'); }
+      });
+
+      spec.querySelectorAll('.bloco-head').forEach(bh => {
+        if (!q) { bh.style.display = ''; return; }
+        let el = bh.nextElementSibling;
+        let any = false;
+        while (el && !el.classList.contains('bloco-head')) {
+          if (el.classList.contains('scenario') && el.style.display !== 'none') { any = true; break; }
+          el = el.nextElementSibling;
+        }
+        bh.style.display = any ? '' : 'none';
+      });
+
+      if (q) {
+        spec.classList.toggle('open', specVisible > 0);
+        spec.style.display = specVisible > 0 ? '' : 'none';
+      } else {
+        spec.style.display = '';
+        spec.classList.add('open');
+        scenarios.forEach(sc => sc.style.display = '');
+        spec.querySelectorAll('.bloco-head').forEach(bh => bh.style.display = '');
+      }
+
+      const badge = spec.querySelector('.spec-count');
+      if (badge) badge.textContent = q
+        ? `${specVisible} / ${scenarios.length} cenários`
+        : `${scenarios.length} cenário${scenarios.length !== 1 ? 's' : ''}`;
+    });
+
+    cntVisible.textContent = q ? visible : TOTAL;
+    noResultsTerm.textContent = q;
+    noResults.style.display = (q && visible === 0) ? 'block' : 'none';
+  });
+</script>
+</body>
+</html>
