@@ -1,0 +1,14 @@
+{
+  "cartaoAprovado": {
+    "numero": "4111 1111 1111 1111",
+    "titular": "QA TESTADOR ST",
+    "validade": "12/26",
+    "cvv": "123"
+  },
+  "cartaoRecusado": {
+    "numero": "5555 4444 3333 2222",
+    "titular": "QA RECUSADO",
+    "validade": "12/26",
+    "cvv": "999"
+  }
+}

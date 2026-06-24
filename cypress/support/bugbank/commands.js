@@ -47,7 +47,6 @@ Cypress.Commands.add('cadastrarEVoltar', (email, nome, senha, opts = {}) => {
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 // Pré-condição: card está na face de login (.card__login visível).
-// Após cadastrarEVoltar o card já retorna ao login automaticamente.
 
 Cypress.Commands.add('loginBugBank', (email, senha) => {
   cy.get('.card__login input[name="email"]').clear().type(email)

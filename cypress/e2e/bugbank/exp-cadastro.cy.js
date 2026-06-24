@@ -5,7 +5,7 @@
 // EXP-012 | E-mails inválidos → bloqueados
 // EXP-015 | Campos vazios → validação ativa
 
-const { criarUsuario } = require('../support/factories/usuario');
+const { criarUsuario } = require('../../support/bugbank/factories/usuario');
 const APP_URL = 'https://bugbank.netlify.app';
 
 describe('Exploratório — Cadastro e Saldo', () => {

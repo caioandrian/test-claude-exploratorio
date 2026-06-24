@@ -1,7 +1,7 @@
 // EXP-006 | Login com senha errada → acesso negado
 // EXP-006b | Login com e-mail inexistente → acesso negado
 
-const { criarUsuario } = require('../support/factories/usuario');
+const { criarUsuario } = require('../../support/bugbank/factories/usuario');
 const APP_URL = 'https://bugbank.netlify.app';
 
 describe('Exploratório — Login', () => {

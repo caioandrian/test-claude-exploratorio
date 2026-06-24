@@ -1,0 +1,18 @@
+{
+  "base": {
+    "nome": "QA Testador ST",
+    "email": "qa.testador.st@showtests.com",
+    "cpf": "111.222.333-45",
+    "telefone": "(11) 91234-5678",
+    "dataNasc": "1990-06-15",
+    "senha": "Senha@123"
+  },
+  "cpfRejeitado": {
+    "nome": "QA CPF Rejeitado",
+    "email": "qa.cpf00@showtests.com",
+    "cpf": "123.456.789-00",
+    "telefone": "(11) 98765-4321",
+    "dataNasc": "1985-03-20",
+    "senha": "Senha@123"
+  }
+}
