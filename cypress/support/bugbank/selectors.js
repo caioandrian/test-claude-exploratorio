@@ -10,15 +10,16 @@
 //       <ContainerFormRegister>          ← styled-component (classe dinâmica)
 //
 // ESTRATÉGIA: escopar ao container pai estático (.card__login / .card__register)
-// Usar cy.disableTransitions() no beforeEach — injeta backface-visibility:visible
-// tornando o flip instantâneo e evitando erros de visibilidade no .card__register.
+// Usar cy.disableTransitions() no beforeEach — injeta transition:none
+// tornando o flip instantâneo. { force: true } obrigatório em .card__register
+// pois backface-visibility:hidden é herdado e não pode ser removido sem quebrar o layout.
 
 // ─── LOGIN (frente do card — .card__login) ───────────────────────────────────
 // Inputs não têm id; form não tem id. Seletor: container + name.
 export const LOGIN = {
-  email:    '.card__login input[name="email"]',
-  password: '.card__login input[name="password"]',
-  btnAcessar:    '.card__login .login__buttons button[type="submit"]',
+  email:      '.card__login input[name="email"]',
+  password:   '.card__login input[name="password"]',
+  btnAcessar: '.card__login .login__buttons button[type="submit"]',
   linkRegistrar: '.card__login .login__buttons button[type="button"]',
 }
 
@@ -30,26 +31,25 @@ export const REGISTER = {
   email:               '.card__register input[name="email"]',
   name:                '.card__register input[name="name"]',
   password:            '.card__register input[name="password"]',
-  passwordConfirmation: '.card__register input[name="passwordConfirmation"]',
-  checkboxSaldo:       '#toggleAddBalance',                      // ToggleSwitch repassa id ✓
-  btnCadastrar:        '.card__register button[type="submit"]',  // Button compartilhado não repassa id
-  btnVoltar:           '#btnBackButton',                         // BackText styled-a repassa id ✓
+  passwordConfirmation:'.card__register input[name="passwordConfirmation"]',
+  checkboxSaldo:       '#toggleAddBalance',
+  btnCadastrar:        '.card__register button[type="submit"]',
+  btnVoltar:           '#btnBackButton',
 }
 
 // ─── TRANSFERÊNCIA (/transfer) ────────────────────────────────────────────────
-// Fonte: src/components/FormTransfer/index.tsx
 // form tag sem id; inputs com name.
-// btnTransferNow: Button compartilhado NÃO repassa id ao DOM — único submit na página.
+// btnTransferNow: Button compartilhado NÃO repassa id — único submit na página.
 export const TRANSFER = {
   accountNumber: 'input[name="accountNumber"]',
   digit:         'input[name="digit"]',
   value:         'input[name="transferValue"]',
   description:   'input[name="description"]',
-  btnTransferir: 'button[type="submit"]',  // Button compartilhado não repassa id; único submit em /transfer
+  btnTransferir: 'button[type="submit"]',
 }
 
 // ─── HOME (/home) ─────────────────────────────────────────────────────────────
-// Fonte: src/pages/home/index.tsx — todos os elementos têm id estável.
+// Todos os elementos têm id estável.
 export const HOME = {
   balance:       '#textBalance',
   accountNumber: '#textAccountNumber',
@@ -59,7 +59,7 @@ export const HOME = {
 }
 
 // ─── EXTRATO (/bank-statement) ────────────────────────────────────────────────
-// Fonte: src/pages/bank-statement/index.tsx — todos têm id estável.
+// Todos têm id estável.
 export const STATEMENT = {
   balance:         '#textBalanceAvailable',
   transactionType: '#textTypeTransaction',
@@ -69,7 +69,6 @@ export const STATEMENT = {
 }
 
 // ─── MODAL ───────────────────────────────────────────────────────────────────
-// Fonte: src/components/Modal/index.tsx — ids estáveis verificados nos commands existentes.
 export const MODAL = {
   text:  '#modalText',
   btnOk: '#btnCloseModal',

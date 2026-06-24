@@ -4,7 +4,7 @@
 // EXP-016 | Vírgula como separador decimal → comportamento correto
 // EXP-019 | Double-click no botão Transferir → não debita em dobro
 
-const { criarUsuario } = require('../support/factories/usuario');
+const { criarUsuario } = require('../../support/bugbank/factories/usuario');
 const APP_URL = 'https://bugbank.netlify.app';
 
 describe('Exploratório — Transferência', () => {
@@ -146,7 +146,7 @@ describe('Exploratório — Transferência', () => {
     cy.logoutBugBank();
 
     cy.loginBugBank(remetente.email, remetente.senha);
-    cy.capturarSaldo().then((saldoAntes) => {
+    cy.capturarSaldo().then(() => {
       cy.then(() => {
         cy.get('#btn-TRANSFERÊNCIA').click();
         cy.get('input[name="accountNumber"]').type(destNum);

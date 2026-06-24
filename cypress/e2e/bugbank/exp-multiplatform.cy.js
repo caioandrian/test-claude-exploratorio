@@ -5,7 +5,7 @@
 // EXP-027 | Cadastro mobile 375x667
 // EXP-028 | Transferência mobile 375x667
 
-const { criarUsuario } = require('../support/factories/usuario');
+const { criarUsuario } = require('../../support/bugbank/factories/usuario');
 const APP_URL = 'https://bugbank.netlify.app';
 
 describe('Exploratório — Multi-Browser e Mobile', () => {
