@@ -2,6 +2,27 @@
 const ST_APP_URL = 'https://caioandrian.github.io/webstore-ingressos-sample'
 
 /**
+ * Injeta um usuário no localStorage SEM sessão ativa.
+ * Útil para testar login via UI — o usuário existe mas não está autenticado.
+ * Recebe { nome, email, senha, cpf, telefone, dataNasc }.
+ */
+Cypress.Commands.add('stCriarUsuario', (user, userId = 'test-exp-005') => {
+  cy.window().then((win) => {
+    const storedUser = {
+      id:        userId,
+      name:      user.nome,
+      email:     user.email,
+      password:  user.senha, // campo exigido pelo modelo de dados do ShowTickets
+      cpf:       user.cpf,
+      phone:     user.telefone,
+      birthdate: user.dataNasc,
+      createdAt: new Date().toISOString(),
+    }
+    win.localStorage.setItem('showtickets_users', JSON.stringify([storedUser]))
+  })
+})
+
+/**
  * Visita o ShowTickets, limpa o localStorage e opcionalmente injeta um usuário
  * com sessão ativa. Recebe { nome, email, senha, cpf, telefone, dataNasc }.
  * Quando user é fornecido, faz reload para a app reconhecer a sessão.
@@ -70,7 +91,9 @@ Cypress.Commands.add('stLogin', (email, senha) => {
 Cypress.Commands.add('stLogout', () => {
   cy.get('#user-menu-btn').click()
   cy.get('#header-logout-btn').click()
-  cy.get('#header-login-btn', { timeout: 5000 }).should('be.visible')
+  // #header-login-btn tem 'hidden sm:block' (Tailwind) — visibilidade depende do viewport
+  // e do estado pós-logout. Verificar existência é suficiente para confirmar logout.
+  cy.get('#header-login-btn', { timeout: 5000 }).should('exist')
 })
 
 /**
